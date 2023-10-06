@@ -1,7 +1,7 @@
-from compiler.compiler import StateCompiler
-from compiler.state import LightState
-from generic.command import SwitchCommand, BrightnessCommand, RGBCommand, EffectCommand, SpeedCommand
-from generic.effect import Effect
+from cheshire.compiler.compiler import StateCompiler
+from cheshire.compiler.state import LightState
+from cheshire.generic.command import SwitchCommand, BrightnessCommand, RGBCommand, EffectCommand, SpeedCommand
+from cheshire.generic.effect import Effect
 from .platform_commands import *
 from .constants import *
 

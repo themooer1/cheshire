@@ -4,7 +4,7 @@ import bleak as b
 
 import pdb
 
-from hal.compilers.ks03_new.constants import KS03NewScene
+from cheshire.hal.compilers.ks03_new.constants import KS03NewScene
 
 
 dev_name = "KS03~"

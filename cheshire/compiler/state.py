@@ -1,6 +1,6 @@
 from typing_extensions import TypedDict
 
-from generic.command import *
+from cheshire.generic.command import *
 
 LightStateDict = TypedDict(
     'LightStateDict', 

@@ -5,6 +5,9 @@ description = "API for Keepsmile, LuckyStyle, Leeleberd, and related smart light
 authors = ["Eugene Wolffe <fluffy1781@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [
+    { include = "cheshire" },
+]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from compiler.state import LightState
-from generic.platform_command import PlatformCommand
+from cheshire.compiler.state import LightState
+from cheshire.generic.platform_command import PlatformCommand
 
 
 class StateCompiler(ABC):

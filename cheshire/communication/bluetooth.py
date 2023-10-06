@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from bleak import BleakClient
 from bleak.backends.device import BLEDevice
 
-from communication.transmitter import Transmitter
+from cheshire.communication.transmitter import Transmitter
 
 
 @dataclass

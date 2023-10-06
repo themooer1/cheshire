@@ -1,8 +1,8 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
-from compiler.state import LightState
-from generic.command import *
-from hal.devices import device_from_prefix
+from cheshire.compiler.state import LightState
+from cheshire.generic.command import *
+from cheshire.hal.devices import device_from_prefix
 
 async def main():
     # Discover Bluetooth LE devices
