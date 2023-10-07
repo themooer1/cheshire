@@ -2,50 +2,38 @@ import asyncio
 from bleak import BleakScanner, BleakClient
 from cheshire.compiler.state import LightState
 from cheshire.generic.command import *
-from cheshire.hal.devices import device_from_prefix
+from cheshire.hal.devices import Connection, connect_to_ble_device
 
 async def main():
     # Discover Bluetooth LE devices
     discover = await BleakScanner.discover()
-    senders = []
+    connections: list[Connection] = []
 
     # Connect to supported devices
-    for dev in discover:
-        if dev.name == None:
+    for bleak_device in discover:
+        if bleak_device.name == None:
             continue
 
         # Get a device profile if it's supported
-        if profile := device_from_prefix(dev.name[:5]):
-            print(f"Found {dev.name}")
+        if connection := await connect_to_ble_device(bleak_device):
+            print(f"Connected to {bleak_device.name}")
 
-            # Get device command compiler
-            compiler = profile.compiler()
+            connections.append(connection)
 
-            # Connect
-            client = BleakClient(dev)
-            await client.connect()
-
-            print(f"Connecting to {dev.name}")
-            print(await client.connect())
-
-            # Wrap BleakClient in a command transmitter
-            transmitter = profile.get_transmitter(client)
-
-            async def send_state(state: LightState):
-                await transmitter.send_all(
-                    compiler.compile(state)
-                )
-
-            senders.append(send_state)
+    async def send_all(state: LightState):
+        # Push light state to connected devices
+        for c in connections:
+            await c.apply(state)
+            
 
     # Update desired light state
     state = LightState()
     state.update(SwitchCommand(on=True))
-    state.update(BrightnessCommand(0x10))
-    state.update(RGBCommand(0xfe, 0x0, 0x0))
+    state.update(BrightnessCommand(0x30))
+    state.update(RGBCommand(0x0e, 0x0, 0xaa))
+    # state.update(EffectCommand(Effect.JUMP_7))
 
-    # Push light state to devices
-    for s in senders:
-        await s(state)
+    await send_all(state)
+
 
 asyncio.run(main())

@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Callable
 
 from bleak import BleakClient
+from bleak.backends.device import BLEDevice
 from cheshire.communication.bluetooth import BLETransmitter, GattProfile
 from cheshire.communication.transmitter import Transmitter
 from cheshire.compiler.compiler import StateCompiler
@@ -56,6 +57,12 @@ def gatt_from_prefix(prefix: DeviceNamePrefix) -> GattProfile | None:
 def transmitter_from_prefix(prefix: DeviceNamePrefix, client: BleakClient) -> Transmitter | None:
     return BLETransmitter(client, gatt_from_prefix(prefix))
 
+class Connection:
+    def __init__(self, send_state: Callable[[LightState], None]):
+        self._send = send_state
+
+    async def apply(self, state: LightState):
+        await self._send(state)
 
 @dataclass
 class Device:
@@ -63,6 +70,23 @@ class Device:
     compiler: StateCompiler
     get_transmitter: Callable[[BleakClient], Transmitter] 
 
+    async def connect(self, device: BLEDevice):
+        # Instantiate device command compiler
+        compiler = self.compiler()
+
+        # Connect
+        client = BleakClient(device)
+        await client.connect()
+
+        # Wrap BleakClient in a command transmitter
+        transmitter = self.get_transmitter(client)
+
+        async def send_state(state: LightState):
+            await transmitter.send_all(
+                compiler.compile(state)
+            )
+
+        return Connection(send_state)
 
 def make_transmitter_fetcher(prefix: DeviceNamePrefix):
     def fetcher(client: BleakClient):
@@ -119,3 +143,9 @@ def device_from_prefix(prefix: DeviceNamePrefix | str) -> Device | None:
             return None
 
     return devices_by_prefix.get(prefix)
+
+async def connect_to_ble_device(bleak_device: BLEDevice) -> Connection | None:
+    # Fetch device based on first 5 characters of its name
+    if bleak_device.name:
+        if device := device_from_prefix(bleak_device.name[:5]):
+            return await device.connect(bleak_device)
