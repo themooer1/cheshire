@@ -5,7 +5,7 @@ from cheshire.generic.platform_command import PlatformCommand
 
 class Transmitter(ABC):
     @abstractmethod
-    async def send_raw(raw_cmd: bytes):
+    async def send_raw(self, raw_cmd: bytes):
         pass
 
     async def send(self, cmd: PlatformCommand):
