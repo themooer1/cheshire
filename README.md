@@ -9,6 +9,8 @@ API for Keepsmile and related Bluetooth LE lights.
 The example below scans for Bluetooth LE devices and tries to control any 
 which are supported.
 
+For more detailed instructions, see the [user guide](./docs/user_guide.md).
+
 ```python
 import asyncio
 from bleak import BleakScanner, BleakClient
@@ -50,8 +52,6 @@ async def main():
 
 asyncio.run(main())
 ```
-
-For more detailed instructions, see the [user guide](./docs/user_guide.md).
 
 ## Supported Devices
 | Device | Bluetooth Name | Support |
