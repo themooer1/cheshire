@@ -65,7 +65,7 @@ class Connection:
         await self._send(state)
 
 @dataclass
-class Device:
+class DeviceProfile:
     supported_commands: list[type[Command]]
     compiler: StateCompiler
     get_transmitter: Callable[[BleakClient], Transmitter] 
@@ -99,7 +99,7 @@ def make_transmitter_fetcher(prefix: DeviceNamePrefix):
 
 devices_by_prefix = {
         # DeviceNamePrefix.KS01: GattProfile.new("ae00", "ae01", "ae02", "ae01"),
-        DeviceNamePrefix.KS03: Device(
+        DeviceNamePrefix.KS03: DeviceProfile(
             supported_commands=[
                 SwitchCommand,
                 BrightnessCommand,
@@ -110,7 +110,7 @@ devices_by_prefix = {
             compiler=KS03OldCompiler,
             get_transmitter=make_transmitter_fetcher(DeviceNamePrefix.KS03),
         ),
-        DeviceNamePrefix.KS03_New: Device(
+        DeviceNamePrefix.KS03_New: DeviceProfile(
             supported_commands=[
                 SwitchCommand,
                 BrightnessCommand,
@@ -135,7 +135,7 @@ devices_by_prefix = {
         # # DeviceNamePrefix.KS13: GattProfile.new("ae00", "ae01", "ae02", "ae10"),
     }
 
-def device_from_prefix(prefix: DeviceNamePrefix | str) -> Device | None:
+def device_from_prefix(prefix: DeviceNamePrefix | str) -> DeviceProfile | None:
     if isinstance(prefix, str):
         try:
             prefix = DeviceNamePrefix(prefix)
@@ -144,8 +144,12 @@ def device_from_prefix(prefix: DeviceNamePrefix | str) -> Device | None:
 
     return devices_by_prefix.get(prefix)
 
+def device_profile_from_ble_device(bleak_device: BLEDevice) -> DeviceProfile | None:
+# Fetch device based on first 5 characters of its name
+    if bleak_device.name:
+        return device_from_prefix(bleak_device.name[:5])
+
 async def connect_to_ble_device(bleak_device: BLEDevice) -> Connection | None:
     # Fetch device based on first 5 characters of its name
-    if bleak_device.name:
-        if device := device_from_prefix(bleak_device.name[:5]):
-            return await device.connect(bleak_device)
+    if device := device_profile_from_ble_device(bleak_device):
+        return await device.connect(bleak_device)
