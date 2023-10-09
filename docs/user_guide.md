@@ -2,13 +2,14 @@
 
 ## Discover
 
-To connect to a light and start controlling it, use the `connect_to_ble_device` method
-from cheshire.hal.devices on a `BLEDevice`` discovered by bleak.
+To connect to a light and start controlling it, use `connect_to_ble_device` on a `BLEDevice` discovered by bleak.
 
 If the device is supported, and the connection succeeds, you will get back a `Connection`
 and if not, `None`.
 
 ```python
+from cheshire.hal.devices import connect_to_ble_device
+
 # Discover Bluetooth LE devices
 device = await BleakScanner.find_device_by_name(name='KS03~AAABBB')
 
