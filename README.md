@@ -6,7 +6,8 @@ API for Keepsmile and related Bluetooth LE lights.
 
 ## Usage
 
-TODO update with simplified usage as package
+The example below scans for Bluetooth LE devices and tries to control any 
+which are supported.
 
 ```python
 import asyncio
@@ -25,7 +26,7 @@ async def main():
         if bleak_device.name == None:
             continue
 
-        # Get a device profile if it's supported
+        # Connect to this device if it's one we support
         if connection := await connect_to_ble_device(bleak_device):
             print(f"Connected to {bleak_device.name}")
 
@@ -49,6 +50,8 @@ async def main():
 
 asyncio.run(main())
 ```
+
+For more detailed instructions, see the [user guide](./docs/user_guide.md).
 
 ## Supported Devices
 | Device | Bluetooth Name | Support |
