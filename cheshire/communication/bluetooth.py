@@ -44,6 +44,12 @@ class BLETransmitter(Transmitter):
         self._client = client
         self._gatt = gatt
 
+    async def close(self):
+        await self.disconnect()
+
+    async def disconnect(self):
+        await self._client.disconnect()
+
     async def send_raw(self, raw_command: bytes):
         for service in self._client.services:
             # Match the short Bluetooth UUID

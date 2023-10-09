@@ -5,6 +5,11 @@ from cheshire.generic.platform_command import PlatformCommand
 
 class Transmitter(ABC):
     @abstractmethod
+    async def close(self):
+        """Must be called before transmitter is discarded so it can close connections etc."""
+        pass
+
+    @abstractmethod
     async def send_raw(self, raw_cmd: bytes):
         pass
 

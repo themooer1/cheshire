@@ -58,11 +58,17 @@ def transmitter_from_prefix(prefix: DeviceNamePrefix, client: BleakClient) -> Tr
     return BLETransmitter(client, gatt_from_prefix(prefix))
 
 class Connection:
-    def __init__(self, send_state: Callable[[LightState], None]):
-        self._send = send_state
+    def __init__(self, compiler: StateCompiler, transmitter: Transmitter):
+        self._transmitter = transmitter
+        self._compiler = compiler
 
     async def apply(self, state: LightState):
-        await self._send(state)
+        await self._transmitter.send_all(
+            self._compiler.compile(state)
+        )
+
+    async def disconnect(self):
+        await self._transmitter.close()
 
 @dataclass
 class DeviceProfile:
@@ -81,12 +87,7 @@ class DeviceProfile:
         # Wrap BleakClient in a command transmitter
         transmitter = self.get_transmitter(client)
 
-        async def send_state(state: LightState):
-            await transmitter.send_all(
-                compiler.compile(state)
-            )
-
-        return Connection(send_state)
+        return Connection(compiler, transmitter)
 
 def make_transmitter_fetcher(prefix: DeviceNamePrefix):
     def fetcher(client: BleakClient):
