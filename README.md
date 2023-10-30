@@ -1,4 +1,4 @@
-![Cheshire Cat](./docs/assets/img/cheshire.png)
+![Cheshire Cat](https://raw.githubusercontent.com/themooer1/cheshire/master/docs/assets/img/cheshire.png)
 # Cheshire
 
 API for Keepsmile and related Bluetooth LE lights.
