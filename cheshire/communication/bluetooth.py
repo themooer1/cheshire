@@ -43,6 +43,15 @@ class BLETransmitter(Transmitter):
     def __init__(self, client: BleakClient, gatt: GattProfile):
         self._client = client
         self._gatt = gatt
+        self._characteristic = None
+        for service in self._client.services:
+            # Match the short Bluetooth UUID
+            if service.uuid[4:8] == self._gatt.write_service:
+                for characteristic in service.characteristics:
+                    if characteristic.uuid[4:8] == self._gatt.write_characteristic:
+                        self._characteristic = characteristic
+                        return
+        raise ConnectionError(f"Expected BLEClient to support a characteristic with UUID[4:8] == {self._gatt.write_characteristic}")
 
     async def close(self):
         await self.disconnect()
@@ -51,14 +60,4 @@ class BLETransmitter(Transmitter):
         await self._client.disconnect()
 
     async def send_raw(self, raw_command: bytes):
-        for service in self._client.services:
-            # Match the short Bluetooth UUID
-            # print(f"Service: {service}")
-            # print(f"suuid: {service.uuid} expected: {self._gatt.write_service}")
-            if service.uuid[4:8] == self._gatt.write_service:
-                for characteristic in service.characteristics:
-                    # print(f"Characteristic: {characteristic}")
-                    # print(f"cuuid: {characteristic.uuid} expected: {self._gatt.write_characteristic}")
-                    if characteristic.uuid[4:8] == self._gatt.write_characteristic:
-                        # print(f"Writing {characteristic} = {raw_command.hex()}")
-                        return await self._client.write_gatt_char(characteristic, raw_command, False)
+        return await self._client.write_gatt_char(self._characteristic, raw_command, False)

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cheshire"
-version = "0.1.0"
+version = "0.2.1"
 description = "API for Keepsmile, LuckyStyle, Leeleberd, and related smart lights"
 authors = ["Eugene Wolffe <fluffy1781@gmail.com>"]
 license = "MIT"
