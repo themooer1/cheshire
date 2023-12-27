@@ -35,7 +35,7 @@ class KS03NewCompiler(StateCompiler):
             )
 
         # Extract brightness used in other commands
-        brightness = 255
+        brightness = 254
         if cmd := state.state.get('BrightnessCommand'):
             brightness = cmd.brightness
 
