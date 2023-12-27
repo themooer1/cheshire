@@ -61,14 +61,14 @@ class KS03NewCompiler(StateCompiler):
                 )
                 
         else:
-            r = 255
-            g = 255
-            b = 255
+            r = 100
+            g = 100
+            b = 100
 
             if rgb_cmd := state.state.get('RGBCommand'):
-                r = rgb_cmd.red
-                g = rgb_cmd.green
-                b = rgb_cmd.blue
+                r = int((rgb_cmd.red * 100) / 255)
+                g = int((rgb_cmd.green * 100) / 255)
+                b = int((rgb_cmd.blue * 100) / 255)
 
             platform_commands.append(
                 KS03NewRGBWBrightnessSpeedCommand(

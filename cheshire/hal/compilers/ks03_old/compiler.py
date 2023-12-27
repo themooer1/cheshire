@@ -72,7 +72,11 @@ class KS03OldCompiler(StateCompiler):
         # Set color
         if cmd := state.state.get('RGBCommand'):
             platform_commands.append(
-                KS03OldRGBCommand(cmd.red, cmd.green, cmd.blue)
+                KS03OldRGBCommand(
+                    int((cmd.red * 100) / 255),
+                    int((cmd.green * 100) / 255),
+                    int((cmd.blue * 100) / 255)
+                )
             )
 
         return platform_commands
