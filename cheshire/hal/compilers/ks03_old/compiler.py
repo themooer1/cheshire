@@ -37,23 +37,34 @@ class KS03OldCompiler(StateCompiler):
         # Set scene / music mode
         # (I think this needs to be set, then speed, then brightness
         # possibly with 100ms delays between commands)
-        if cmd := state.state.get('EffectCommand') and cmd.effect != Effect.NONE:
-            scene = effect_to_scene_mapping.get(cmd.effect)
-            music_model = effect_to_music_model_mapping.get(cmd.effect)
-            # TODO support music mode
-            if music_model is not None:
-                speed = 0
-                if speed_cmd := state.state.get('SpeedCommand'):
-                    speed = speed_cmd.speed
-                platform_commands.append(
-                    KS03OldMusicModelCommand(music_model, speed)
-                )
-            if scene is not None:
-                platform_commands.append(
-                    KS03OldSceneCommand(
-                        scene
+        if cmd := state.state.get('EffectCommand'):
+            if cmd.effect == Effect.NONE:
+                # Set a solid color
+                if cmd := state.state.get('RGBCommand'):
+                    platform_commands.append(
+                        KS03OldRGBCommand(
+                            int((cmd.red * 100) / 255),
+                            int((cmd.green * 100) / 255),
+                            int((cmd.blue * 100) / 255)
+                        )
                     )
-                )
+            else:
+                scene = effect_to_scene_mapping.get(cmd.effect)
+                music_model = effect_to_music_model_mapping.get(cmd.effect)
+                # TODO support music mode
+                if music_model is not None:
+                    speed = 0
+                    if speed_cmd := state.state.get('SpeedCommand'):
+                        speed = speed_cmd.speed
+                    platform_commands.append(
+                        KS03OldMusicModelCommand(music_model, speed)
+                    )
+                if scene is not None:
+                    platform_commands.append(
+                        KS03OldSceneCommand(
+                            scene
+                        )
+                    )
 
         # Set speed
         if cmd := state.state.get('SpeedCommand'):
@@ -67,16 +78,6 @@ class KS03OldCompiler(StateCompiler):
         if cmd := state.state.get('BrightnessCommand'):
             platform_commands.append(
                 KS03OldBrightnessCommand(int((cmd.brightness * 100) / 255))
-            )
-        
-        # Set color
-        if cmd := state.state.get('RGBCommand'):
-            platform_commands.append(
-                KS03OldRGBCommand(
-                    int((cmd.red * 100) / 255),
-                    int((cmd.green * 100) / 255),
-                    int((cmd.blue * 100) / 255)
-                )
             )
 
         return platform_commands

@@ -46,40 +46,43 @@ class KS03NewCompiler(StateCompiler):
         
         # KS03New uses different commands for setting color brightness etc.
         # for music and scene modes than in simple light mode
-        if cmd := state.state.get('EffectCommand') and cmd.effect != Effect.NONE:
-            music_model= effect_to_music_model_mapping.get(cmd.effect)
-            scene = effect_to_scene_mapping.get(cmd.effect)
+        if cmd := state.state.get('EffectCommand'):
+            if cmd.effect != Effect.NONE:
+                music_model= effect_to_music_model_mapping.get(cmd.effect)
+                scene = effect_to_scene_mapping.get(cmd.effect)
 
-            if music_model:
-                platform_commands.append(
-                    KS03NewMusicModelCommand(music_model, speed)
-                )
+                if music_model:
+                    platform_commands.append(
+                        KS03NewMusicModelCommand(music_model, speed)
+                    )
+                    
+                if scene:
+                    platform_commands.append(
+                        KS03NewSceneCommand(scene, speed, brightness)
+                    )
+
+                return platform_commands
                 
-            if scene:
-                platform_commands.append(
-                    KS03NewSceneCommand(scene, speed, brightness)
-                )
-                
-        else:
-            r = 100
-            g = 100
-            b = 100
+        
+        r = 100
+        g = 100
+        b = 100
 
-            if rgb_cmd := state.state.get('RGBCommand'):
-                r = int((rgb_cmd.red * 100) / 255)
-                g = int((rgb_cmd.green * 100) / 255)
-                b = int((rgb_cmd.blue * 100) / 255)
+        if rgb_cmd := state.state.get('RGBCommand'):
+            r = int((rgb_cmd.red * 100) / 255)
+            g = int((rgb_cmd.green * 100) / 255)
+            b = int((rgb_cmd.blue * 100) / 255)
 
-            platform_commands.append(
-                KS03NewRGBWBrightnessSpeedCommand(
-                    red=r, 
-                    green=g,
-                    blue=b,
-                    white=0, # KS03New doesn't support warm white
-                    brightness=brightness,
-                    speed=speed,
-                    is_rgb=True # Double-disables warm white :)
-                )
+        platform_commands.append(
+            KS03NewRGBWBrightnessSpeedCommand(
+                red=r, 
+                green=g,
+                blue=b,
+                white=0, # KS03New doesn't support warm white
+                brightness=brightness,
+                speed=speed,
+                is_rgb=True # Double-disables warm white :)
             )
+        )
 
         return platform_commands
