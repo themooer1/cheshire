@@ -66,7 +66,7 @@ class KS03OldCompiler(StateCompiler):
         # Set brightness
         if cmd := state.state.get('BrightnessCommand'):
             platform_commands.append(
-                KS03OldBrightnessCommand(cmd.brightness)
+                KS03OldBrightnessCommand(int((cmd.brightness * 100) / 255))
             )
         
         # Set color
