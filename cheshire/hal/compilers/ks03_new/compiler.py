@@ -37,7 +37,7 @@ class KS03NewCompiler(StateCompiler):
         # Extract brightness used in other commands
         brightness = 254
         if cmd := state.state.get('BrightnessCommand'):
-            brightness = cmd.brightness
+            brightness = min(254, cmd.brightness)
 
         # Extract speed used in other commands
         speed = 0
