@@ -37,7 +37,7 @@ class KS03OldCompiler(StateCompiler):
         # Set scene / music mode
         # (I think this needs to be set, then speed, then brightness
         # possibly with 100ms delays between commands)
-        if cmd := state.state.get('EffectCommand'):
+        if cmd := state.state.get('EffectCommand') and cmd.effect != Effect.NONE:
             scene = effect_to_scene_mapping.get(cmd.effect)
             music_model = effect_to_music_model_mapping.get(cmd.effect)
             # TODO support music mode

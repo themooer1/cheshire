@@ -46,7 +46,7 @@ class KS03NewCompiler(StateCompiler):
         
         # KS03New uses different commands for setting color brightness etc.
         # for music and scene modes than in simple light mode
-        if cmd := state.state.get('EffectCommand'):
+        if cmd := state.state.get('EffectCommand') and cmd.effect != Effect.NONE:
             music_model= effect_to_music_model_mapping.get(cmd.effect)
             scene = effect_to_scene_mapping.get(cmd.effect)
 
