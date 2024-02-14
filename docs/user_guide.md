@@ -87,7 +87,7 @@ class SpeedCommand(Command):
 
 ### Query Device Support
 
-To check explicitly whether a given device supports a command, you can check it's `DeviceProfile`.
+To check explicitly whether a given device supports a command, you can check its `DeviceProfile`.
 
 ```python
 from cheshire.hal.devices import device_profile_from_ble_device
