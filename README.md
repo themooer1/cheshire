@@ -9,7 +9,7 @@ API for Keepsmile and related Bluetooth LE lights.
 The example below scans for Bluetooth LE devices and tries to control any 
 which are supported.
 
-For more detailed instructions, see the [user guide](./docs/user_guide.md).
+For more detailed instructions, see the [user guide](https://github.com/themooer1/cheshire/blob/master/docs/user_guide.md).
 
 ```python
 import asyncio
