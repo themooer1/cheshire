@@ -1,0 +1,7 @@
+# Check for updates to python dependencies
+version: 2
+updates:
+  - package-ecosystem: "pip" # poetry
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily"
