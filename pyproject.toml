@@ -1,19 +1,14 @@
-[tool.poetry]
-name = "cheshire"
-version = "0.6.1"
-description = "API for Keepsmile, LuckyStyle, Leeleberd, and related smart lights"
-authors = ["Eugene Wolffe <fluffy1781@gmail.com>"]
-license = "MIT"
-readme = "README.md"
-packages = [
-    { include = "cheshire" },
+[project]
+authors = [
+    {name = "Eugene Wolffe", email = "fluffy1781@gmail.com"},
 ]
-
-[tool.poetry.dependencies]
-python = ">=3.13"
-bleak = ">=0.22.3"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+license = {text = "MIT"}
+requires-python = ">=3.12"
+dependencies = [
+    "bleak>=0.22.3",
+    "typing-extensions>=4.14.0",
+]
+name = "cheshire"
+version = "0.6.2"
+description = "API for Keepsmile, LuckyStyle, Leeleberd, and related smart lights"
+readme = "README.md"
