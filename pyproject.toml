@@ -5,10 +5,10 @@ authors = [
 license = {text = "MIT"}
 requires-python = ">=3.12"
 dependencies = [
-    "bleak>=0.22.3",
-    "typing-extensions>=4.14.0",
+    "bleak>=2.1.1",
+    "typing-extensions>=4.15.0",
 ]
 name = "cheshire"
-version = "0.6.2"
+version = "1.0.0"
 description = "API for Keepsmile, LuckyStyle, Leeleberd, and related smart lights"
 readme = "README.md"
