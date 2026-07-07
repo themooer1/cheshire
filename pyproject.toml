@@ -12,3 +12,14 @@ name = "cheshire"
 version = "1.0.0"
 description = "API for Keepsmile, LuckyStyle, Leeleberd, and related smart lights"
 readme = "README.md"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "opencv-python>=4.10",
+    "numpy>=1.26",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
